@@ -5,18 +5,22 @@ import PropTypes from 'prop-types';
 const TodoItem = ({ todo }) => {
   const todoContext = useContext(TodoContext);
   const { updateTodo, deleteTodo } = todoContext;
-  const { task, completed, id } = todo;
+  const { task, completed, _id } = todo;
 
   const onChange = e => {
     updateTodo({ ...todo, [e.target.name]: e.target.value });
   };
 
   const toggleCheckbox = e => {
-    updateTodo({ ...todo, [e.target.name]: !todo.completed });
+    let completed = 'true';
+    if (todo.completed) {
+      completed = 'false';
+    }
+    updateTodo({ ...todo, [e.target.name]: completed });
   };
 
   const onDelete = e => {
-    deleteTodo(id);
+    deleteTodo(_id);
   };
 
   return (
@@ -27,7 +31,6 @@ const TodoItem = ({ todo }) => {
           name='completed'
           onChange={toggleCheckbox}
           checked={completed}
-          value={completed}
         />
         <input
           type='text'

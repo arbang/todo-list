@@ -49,7 +49,7 @@ router.delete('/:id', async (req, res) => {
     res.status(500).send('Server Error');
   }
 });
-//@route PUT api/todos/
+//@route PUT api/todos/:id
 //@desc   Update a todo
 //@access private
 router.put('/:id', async (req, res) => {
@@ -61,12 +61,13 @@ router.put('/:id', async (req, res) => {
   if (completed) todoFields.completed = completed;
 
   try {
-    let todo = await Todo.findByIdAndUpdate(
+    let todo = await Todo.findById(req.params.id);
+    if (!todo) return res.status(400).send('Todo not found');
+    todo = await Todo.findByIdAndUpdate(
       req.params.id,
       { $set: todoFields },
       { new: true }
     );
-    if (!todo) return res.status(400).send('Todo not found');
     res.json(todo);
   } catch (err) {
     console.error(err.message);
